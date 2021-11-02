@@ -20,6 +20,14 @@ a {
     color: #7DB7B4;
 }
 
+.has-search {
+    float: right;
+}
+
+.nav_active {
+    background: rgba(125, 183, 180, 0.15);
+}
+
 .has-search .input__search {
     padding-left: 2.375rem;
 }
@@ -63,6 +71,10 @@ a {
     margin: 4px 4px;
     text-align: center;
     color: black;
+}
+
+.pagi_disable {
+    color: rgba(125, 183, 180, 0.5);
 }
 
 .paginate__button__active {

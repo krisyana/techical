@@ -7,7 +7,7 @@ import { Table, Row, Col } from 'react-bootstrap';
 const SideBarItem = (props) => {
   const { text, icon, isLast, active } = props;
   return (
-    <div className={`${styles.nav__item} mb-4`}>
+    <div className={`${styles.nav__item} mb-4 ${active ? 'nav_active' : ''}`}>
       <span className={`${styles.nav__item__img}`}>
         <Image src={icon} alt={`${text}_icon`} width="30" height="30" />
       </span>
@@ -16,25 +16,34 @@ const SideBarItem = (props) => {
   );
 };
 const items = [
-  { text: 'OVERVIEW', icon: '/Globe.svg' },
-  { text: 'BUSINESS', icon: '/Globe.svg' },
-  { text: 'INBOX', icon: '/Globe.svg' },
-  { text: 'COLLABOLATORS', icon: '/Globe.svg' },
-  { text: 'PERFORMANCE', icon: '/Globe.svg' },
-  { text: 'BILLING', icon: '/Globe.svg' },
-  { text: 'SUPPORT', icon: '/Globe.svg' },
+  { text: 'OVERVIEW', icon: '/Globe.svg', active: false },
+  { text: 'BUSINESS', icon: '/Business.svg', active: false },
+  { text: 'INBOX', icon: '/Inbox.svg', active: false },
+  { text: 'COLLABOLATORS', icon: '/Collab.svg', active: false },
+  { text: 'PERFORMANCE', icon: '/Perform.svg', active: true },
+  { text: 'BILLING', icon: '/Billing.svg', active: false },
+  { text: 'SUPPORT', icon: '/Support.svg', active: false },
 ];
 
 const SideBar = () => {
   return (
     <div className={styles.sidebar}>
-      <div className={styles.avatar__layout}>
+      <div className={`${styles.avatar__layout} mb-4`}>
+        {/* <div className={styles.avatar}>
+          KO <span></span>
+        </div>
         <h5>KINKY OSTENDORF</h5>
-        <p>kinkysfruitlab@outlook.com</p>
+        <p>kinkysfruitlab@outlook.com</p> */}
+        <Image src="/Avatar.svg" alt="avatar" width="164px" height="114px" />
       </div>
       <div className={styles.sidebar__nav}>
         {items.map((el) => (
-          <SideBarItem key={el.text} text={el.text} icon={el.icon} />
+          <SideBarItem
+            key={el.text}
+            text={el.text}
+            icon={el.icon}
+            active={el.active}
+          />
         ))}
       </div>
     </div>
@@ -86,8 +95,11 @@ export default function Home(props) {
                 placeholder="Search by email or name"
               />
             </div>
-            <h6>INTERESTED USERS</h6>
-            <Table hover className={styles.usertable}>
+            <div>
+              {' '}
+              <h6>INTERESTED USERS</h6>
+            </div>
+            <table hover className={styles.usertable}>
               <thead className={styles.usertable__head}>
                 <tr>
                   <th>ID</th>
@@ -97,18 +109,20 @@ export default function Home(props) {
               </thead>
               <tbody>
                 {props.data.map(({ email, id, first_name, last_name }) => (
-                  <tr key={id}>
+                  <tr key={id} className={`${styles.table__row} my-2`}>
                     <td>{id}</td>
                     <td>{email}</td>
                     <td>{first_name + ' ' + last_name}</td>
                   </tr>
                 ))}
               </tbody>
-            </Table>
-            <div>
+            </table>
+            <div className={styles.pagination}>
               {' '}
               <button
-                className={'paginate__button'}
+                className={`${styles.pagination__arrow} ${
+                  props.page <= 1 ? 'pagi_disable' : ''
+                }`}
                 onClick={() => Router.push(`/?page=${props.page - 1}`)}
                 disabled={props.page <= 1}
               >
@@ -127,7 +141,7 @@ export default function Home(props) {
                 </button>
               ))}
               <button
-                className={'paginate__button primary'}
+                className={styles.pagination__arrow}
                 onClick={() => Router.push(`/?page=${props.page + 1}`)}
                 disabled={props.page >= props.total_pages}
               >
