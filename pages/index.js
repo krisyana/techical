@@ -1,18 +1,50 @@
 import Head from 'next/head';
+import { useState } from 'react';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import Router from 'next/router';
-import { Table, Row, Col } from 'react-bootstrap';
+import { Row, Col, Collapse } from 'react-bootstrap';
 
-const SideBarItem = (props) => {
+export const SideBarItem = (props) => {
   const { text, icon, isLast, active } = props;
+  const [open, setOpen] = useState(true);
+
   return (
-    <div className={`${styles.nav__item} mb-4 ${active ? 'nav_active' : ''}`}>
-      <span className={`${styles.nav__item__img}`}>
-        <Image src={icon} alt={`${text}_icon`} width="30" height="30" />
-      </span>
-      {text}
-    </div>
+    <>
+      {text === 'PERFORMANCE' ? (
+        <>
+          <button
+            onClick={() => setOpen(!open)}
+            className={`${styles.nav__item} mb-4 ${
+              active ? `${styles.nav__item__active}` : ''
+            }`}
+          >
+            <span className={`${styles.nav__item__img}`}>
+              <Image src={icon} alt={`${text}_icon`} width="30" height="30" />
+            </span>
+            {text}
+          </button>
+          <Collapse in={open}>
+            <div id="collapse-text">
+              <ul>
+                <li>SUMMARY</li>
+                <li>CREDIT</li>
+                <li className="primary">INTERESTED USERS</li>
+              </ul>
+            </div>
+          </Collapse>
+        </>
+      ) : (
+        <button
+          className={`${styles.nav__item} mb-4 ${active ? 'nav_active' : ''}`}
+        >
+          <span className={`${styles.nav__item__img}`}>
+            <Image src={icon} alt={`${text}_icon`} width="30" height="30" />
+          </span>
+          {text}
+        </button>
+      )}
+    </>
   );
 };
 const items = [
@@ -25,16 +57,20 @@ const items = [
   { text: 'SUPPORT', icon: '/Support.svg', active: false },
 ];
 
-const SideBar = () => {
+export const SideBar = () => {
   return (
     <div className={styles.sidebar}>
       <div className={`${styles.avatar__layout} mb-4`}>
-        {/* <div className={styles.avatar}>
-          KO <span></span>
+        <div className={styles.avatar}>
+          <Image
+            src="/Group 1118.png"
+            alt="avatar"
+            width="162px"
+            height="84px"
+          />
         </div>
-        <h5>KINKY OSTENDORF</h5>
-        <p>kinkysfruitlab@outlook.com</p> */}
-        <Image src="/Avatar.svg" alt="avatar" width="164px" height="114px" />
+        <h5 className={styles.avatar__username}>KINKY OSTENDORF</h5>
+        <p className={styles.avatar__email}>kinkysfruitlab@outlook.com</p>
       </div>
       <div className={styles.sidebar__nav}>
         {items.map((el) => (
@@ -80,26 +116,28 @@ export default function Home(props) {
                 <h5>Interested Users</h5>
               </div>
             </div>
-            <div className="form-group has-search my-5">
-              <span className="form-control-feedback">
-                <Image
-                  src="/zoom_out_24px.png"
-                  alt="search_icon"
-                  width="15"
-                  height="15"
+            <div className="search__container">
+              <div className="form-group has-search my-5">
+                <span className="form-control-feedback">
+                  <Image
+                    src="/zoom_out_24px.png"
+                    alt="search_icon"
+                    width="15"
+                    height="15"
+                  />
+                </span>
+                <input
+                  type="text"
+                  className="input__search"
+                  placeholder="Search by email or name"
                 />
-              </span>
-              <input
-                type="text"
-                className="input__search"
-                placeholder="Search by email or name"
-              />
+              </div>
             </div>
-            <div>
-              {' '}
+
+            <div className="heading">
               <h6>INTERESTED USERS</h6>
             </div>
-            <table hover className={styles.usertable}>
+            <table className={styles.usertable}>
               <thead className={styles.usertable__head}>
                 <tr>
                   <th>ID</th>
@@ -109,7 +147,7 @@ export default function Home(props) {
               </thead>
               <tbody>
                 {props.data.map(({ email, id, first_name, last_name }) => (
-                  <tr key={id} className={`${styles.table__row} my-2`}>
+                  <tr key={id} className={`${styles.table__row} my-5`}>
                     <td>{id}</td>
                     <td>{email}</td>
                     <td>{first_name + ' ' + last_name}</td>
@@ -120,9 +158,7 @@ export default function Home(props) {
             <div className={styles.pagination}>
               {' '}
               <button
-                className={`${styles.pagination__arrow} ${
-                  props.page <= 1 ? 'pagi_disable' : ''
-                }`}
+                className={styles.pagination__arrow}
                 onClick={() => Router.push(`/?page=${props.page - 1}`)}
                 disabled={props.page <= 1}
               >
